@@ -2,9 +2,8 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Inter, Instrument_Serif } from "next/font/google";
 import { getContent } from "@/content";
-import { Header } from "@/components/sections/Header";
-import { Footer } from "@/components/sections/Footer";
 import { MotionProvider } from "@/components/ui/MotionProvider";
+import { RevealObserver } from "@/components/ui/RevealObserver";
 import "./globals.css";
 
 // Polices auto-hébergées par next/font (aucune requête vers Google côté visiteur).
@@ -23,7 +22,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 const { site, locale } = getContent();
-const defaultTitle = `${site.name} · Rendus déco par IA pour locations courte durée`;
+const defaultTitle = `${site.name} · Visites 3D par IA pour locations courte durée`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -31,9 +30,9 @@ export const metadata: Metadata = {
   description: site.description,
   applicationName: site.name,
   keywords: [
-    "home staging virtuel",
-    "décoration Airbnb",
-    "rendu décoration IA",
+    "visite virtuelle 3D",
+    "visite 3D location saisonnière",
+    "Gaussian Splatting",
     "location courte durée",
     "conciergerie Airbnb",
     "gîte",
@@ -65,7 +64,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang={locale} className={`${inter.variable} ${instrumentSerif.variable}`}>
+    // suppressHydrationWarning : la classe `js` est ajoutée par le script ci-dessous avant l'hydratation.
+    <html lang={locale} className={`${inter.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Active les animations d'apparition uniquement si JavaScript est disponible. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
       <body>
         <a
           href="#contenu"
@@ -73,13 +77,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           {site.skipLink}
         </a>
-        <MotionProvider>
-          <Header site={site} />
-          <main id="contenu" tabIndex={-1} className="focus:outline-none">
-            {children}
-          </main>
-          <Footer />
-        </MotionProvider>
+        <MotionProvider>{children}</MotionProvider>
+        <RevealObserver />
       </body>
     </html>
   );

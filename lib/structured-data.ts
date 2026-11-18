@@ -2,7 +2,7 @@ import { getContent } from "@/content";
 
 /** Données structurées schema.org (JSON-LD) de la page d'accueil. */
 export function homeStructuredData() {
-  const { site, faq, pricing, styles } = getContent();
+  const { site, faq, pricing } = getContent();
 
   const organization = {
     "@context": "https://schema.org",
@@ -20,14 +20,15 @@ export function homeStructuredData() {
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": `${site.url}/#service`,
-    name: "Rendus de décoration intérieure par IA",
-    serviceType: "Home staging virtuel et rendus de décoration intérieure",
+    name: "Visites virtuelles 3D par IA pour locations courte durée",
+    serviceType: "Visite virtuelle 3D (Gaussian Splatting) à partir d'une vidéo smartphone",
     description: site.description,
     provider: { "@id": `${site.url}/#organization` },
     areaServed: { "@type": "Country", name: "France" },
     audience: {
       "@type": "Audience",
-      audienceType: "Hôtes Airbnb, conciergeries, agents immobiliers et investisseurs en location meublée",
+      audienceType:
+        "Conciergeries, propriétaires de gîtes et chambres d'hôtes, hôtes Airbnb et Booking, agents immobiliers et investisseurs",
     },
     hasOfferCatalog: {
       "@type": "OfferCatalog",
@@ -38,7 +39,6 @@ export function homeStructuredData() {
         description: plan.description,
       })),
     },
-    keywords: styles.items.map((s) => s.name).join(", "),
   };
 
   const faqPage = {

@@ -1,12 +1,12 @@
 import type { Content } from "../types";
 import { site } from "./site";
-import { hero, reassurance, howItWorks, audiences, notFound } from "./home";
-import { projects } from "./projects";
-import { styles } from "./styles";
+import { hero, reassurance, demo, howItWorks, benefits, share, audiences, projects, notFound } from "./home";
+import { tours, tourUi, demoPage } from "./tours";
 import { pricing } from "./pricing";
 import { testimonials } from "./testimonials";
 import { faq } from "./faq";
 import { form } from "./form";
+import { guide } from "./guide";
 import { legal } from "./legal";
 
 export const fr: Content = {
@@ -14,14 +14,20 @@ export const fr: Content = {
   site,
   hero,
   reassurance,
-  projects,
+  demo,
+  tours,
+  tourUi,
+  demoPage,
   howItWorks,
-  styles,
+  benefits,
+  share,
   audiences,
+  projects,
   pricing,
   testimonials,
   faq,
   form,
+  guide,
   legal,
   notFound,
 };

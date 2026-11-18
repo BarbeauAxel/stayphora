@@ -3,9 +3,9 @@ import type { SiteContent } from "../types";
 export const site: SiteContent = {
   name: "Stayphora",
   url: "https://stayphora.fr",
-  tagline: "Rendus de décoration intérieure par IA pour locations courte durée",
+  tagline: "Visites 3D navigables par IA pour locations courte durée",
   description:
-    "Stayphora imagine la redécoration de votre location courte durée grâce à l'IA. Envoyez vos photos, choisissez un style et recevez vos rendus HD en 48 h, sans travaux ni achat à l'aveugle.",
+    "Stayphora transforme une simple vidéo filmée au smartphone en visite 3D photoréaliste de votre location courte durée. Vos voyageurs se déplacent librement dans le logement, depuis leur navigateur.",
   // [À remplacer] adresse de contact publique
   email: "contact@stayphora.fr",
   // [À remplacer] liens réseaux sociaux
@@ -14,9 +14,9 @@ export const site: SiteContent = {
     linkedin: "https://www.linkedin.com/company/stayphora",
   },
   nav: [
-    { label: "Réalisations", href: "/#realisations" },
+    { label: "Démo", href: "/#demo" },
     { label: "Comment ça marche", href: "/#comment-ca-marche" },
-    { label: "Styles", href: "/#styles" },
+    { label: "Réalisations", href: "/#realisations" },
     { label: "Tarifs", href: "/#tarifs" },
     { label: "FAQ", href: "/#faq" },
   ],
@@ -25,11 +25,12 @@ export const site: SiteContent = {
   menuOpen: "Ouvrir le menu",
   menuClose: "Fermer le menu",
   footerBlurb:
-    "Stay, le séjour ; -phora, « qui apporte » en grec. Stayphora, c'est ce qui apporte un meilleur séjour : des intérieurs pensés pour vos voyageurs, visualisés avant d'être réalisés.",
+    "Stay, le séjour ; -phora, « qui apporte » en grec. Stayphora apporte le séjour jusqu'au voyageur, avant même son arrivée : des visites 3D fidèles, où l'on se déplace comme si l'on y était.",
   footerNavTitle: "Navigation",
   footerContactTitle: "Contact",
   footerLegalTitle: "Informations",
   legalLinks: [
+    { label: "Guide de tournage", href: "/guide-tournage" },
     { label: "Mentions légales", href: "/mentions-legales" },
     { label: "Confidentialité", href: "/confidentialite" },
   ],

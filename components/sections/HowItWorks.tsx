@@ -2,10 +2,12 @@ import { getContent } from "@/content";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Icon } from "@/components/ui/Icon";
-import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import Link from "next/link";
+import { ArrowRight, BookOpen } from "lucide-react";
+import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 
 export function HowItWorks() {
-  const { howItWorks } = getContent();
+  const { howItWorks, guide } = getContent();
 
   return (
     <section
@@ -41,6 +43,28 @@ export function HowItWorks() {
             </RevealItem>
           ))}
         </RevealGroup>
+
+        {/* Mini-guide de tournage */}
+        <Reveal className="mt-8">
+          <Link
+            href="/guide-tournage"
+            className="group flex flex-col gap-4 rounded-2xl border border-line bg-cream p-6 transition-colors duration-300 hover:border-clay sm:flex-row sm:items-center sm:justify-between sm:p-8"
+          >
+            <div className="flex items-start gap-5">
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-sand text-clay">
+                <BookOpen className="size-5" strokeWidth={1.25} aria-hidden="true" />
+              </span>
+              <div>
+                <p className="font-serif text-2xl leading-tight">{guide.teaser.title}</p>
+                <p className="mt-1 text-stone">{guide.teaser.text}</p>
+              </div>
+            </div>
+            <span className="inline-flex shrink-0 items-center gap-2 text-sm font-medium text-clay-deep">
+              {guide.teaser.cta}
+              <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.5} aria-hidden="true" />
+            </span>
+          </Link>
+        </Reveal>
       </Container>
     </section>
   );

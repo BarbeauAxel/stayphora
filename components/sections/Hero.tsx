@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Play, Smartphone } from "lucide-react";
 import { getContent } from "@/content";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
@@ -21,7 +22,7 @@ export function Hero() {
           sizes="100vw"
           className="object-cover"
         />
-        {hero.video.enabled && <HeroVideo webm={hero.video.webm} mp4={hero.video.mp4} />}
+        {hero.video.enabled && <HeroVideo webm={hero.video.webm} mp4={hero.video.mp4} mobile={hero.video.mobile} />}
         {/* Voile : garantit la lisibilité (contraste AA) quel que soit l'arrière-plan. */}
         <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/40 to-black/30" />
         <div className="absolute inset-0 bg-linear-to-r from-black/35 via-black/10 to-transparent" />
@@ -40,13 +41,18 @@ export function Hero() {
             {hero.subtitle}
           </p>
           <div className="mt-10 flex animate-fade-up flex-col gap-3 [animation-delay:550ms] sm:flex-row sm:items-center sm:gap-4">
-            <ButtonLink href="#devis" size="lg">
+            <ButtonLink href="#demo" size="lg">
+              <Play className="size-4 fill-current" strokeWidth={1.5} aria-hidden="true" />
               {hero.primaryCta}
             </ButtonLink>
-            <ButtonLink href="#realisations" variant="light" size="lg">
+            <ButtonLink href="#devis" variant="light" size="lg">
               {hero.secondaryCta}
             </ButtonLink>
           </div>
+          <p className="mt-6 inline-flex animate-fade-up items-center gap-2.5 text-sm text-white/85 [animation-delay:700ms]">
+            <Smartphone className="size-4" strokeWidth={1.5} aria-hidden="true" />
+            {hero.badge}
+          </p>
         </div>
       </Container>
 

@@ -22,3 +22,7 @@ next-env.d.ts
 # divers
 .DS_Store
 npm-debug.log*
+
+# scènes 3D locales (servies depuis R2 en production)
+/public/demo/*
+!/public/demo/README.md

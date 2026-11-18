@@ -6,81 +6,80 @@ import type { FormContent } from "@/content/types";
 z.config({ jitless: true });
 
 /**
- * Schémas du formulaire de devis, partagés entre le client (react-hook-form)
- * et la route API (validation serveur). Toute règle modifiée ici s'applique
- * donc des deux côtés.
+ * Schéma du formulaire de devis, partagé entre le client (react-hook-form)
+ * et la route API (validation serveur) : une règle modifiée ici s'applique
+ * des deux côtés.
  */
 
-export const PHOTO_LIMITS = {
-  maxFiles: 10,
-  /** Taille totale maximale après compression : reste sous la limite de Resend (40 Mo encodé en base64). */
-  maxTotalBytes: 20 * 1024 * 1024,
-  /** Garde-fou par fichier (une photo compressée pèse en général < 1 Mo). */
-  maxFileBytes: 10 * 1024 * 1024,
-  acceptedTypes: ["image/jpeg", "image/png", "image/webp"] as const,
-  /** Redimensionnement côté navigateur. */
-  maxDimension: 2000,
-  jpegQuality: 0.82,
-} as const;
-
-const PROFILE_VALUES = ["hote", "conciergerie", "agent", "autre"] as const;
-const STYLE_VALUES = [
-  "scandinave",
-  "japandi",
-  "boheme",
-  "mediterraneen",
-  "industriel",
-  "boutique-hotel",
-  "conseil",
-] as const;
+export const PROFILE_VALUES = ["conciergerie", "proprietaire", "hote", "agent", "autre"] as const;
+export const PROPERTY_VALUES = ["studio", "appartement", "maison", "gite", "chambres-hotes", "plusieurs", "autre"] as const;
 
 type Messages = FormContent["validation"];
 
-/** Champs texte du formulaire. */
-export function createQuoteFieldsSchema(m: Messages) {
-  return z.object({
-    name: z.string().trim().min(2, m.nameRequired).max(100, m.nameRequired),
-    email: z.string().trim().max(200, m.emailInvalid).pipe(z.email(m.emailInvalid)),
-    phone: z
-      .string()
-      .trim()
-      .max(30, m.phoneInvalid)
-      .refine((v) => v === "" || /^[+()\d\s.-]{6,30}$/.test(v), m.phoneInvalid),
-    profile: z.enum(PROFILE_VALUES, m.profileRequired),
-    rooms: z
-      .string()
-      .trim()
-      .refine((v) => /^\d{1,2}$/.test(v) && Number(v) >= 1 && Number(v) <= 50, m.roomsInvalid),
-    style: z.union([z.enum(STYLE_VALUES), z.literal("")]),
-    message: z.string().trim().min(10, m.messageTooShort).max(3000, m.messageTooLong),
-    consent: z.boolean(m.consentRequired).refine((v) => v, m.consentRequired),
-    /** Honeypot : doit rester vide (vérifié séparément côté serveur). */
-    website: z.string().max(0).optional(),
-  });
+/** Ajoute https:// si l'utilisateur colle « wetransfer.com/… ». */
+function normalizeUrl(value: string): string {
+  const v = value.trim();
+  if (v === "" || /^https?:\/\//i.test(v)) return v;
+  return `https://${v}`;
 }
 
-/** Liste de photos (objets File), validée côté client ET côté serveur. */
-export function createPhotosSchema(m: Messages) {
+function isHttpUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return (url.protocol === "https:" || url.protocol === "http:") && url.hostname.includes(".");
+  } catch {
+    return false;
+  }
+}
+
+const isIntBetween = (v: string, min: number, max: number) => /^\d{1,5}$/.test(v) && Number(v) >= min && Number(v) <= max;
+
+function optionalUrl(m: Messages) {
   return z
-    .array(
-      z
-        .instanceof(File)
-        .refine((f) => (PHOTO_LIMITS.acceptedTypes as readonly string[]).includes(f.type), m.photosType)
-        .refine((f) => f.size > 0 && f.size <= PHOTO_LIMITS.maxFileBytes, m.photosTooLarge),
-    )
-    .max(PHOTO_LIMITS.maxFiles, m.photosTooMany)
-    .refine((files) => files.reduce((sum, f) => sum + f.size, 0) <= PHOTO_LIMITS.maxTotalBytes, m.photosTooLarge);
+    .string()
+    .max(500, m.urlInvalid)
+    .transform(normalizeUrl)
+    .refine((v) => v === "" || isHttpUrl(v), m.urlInvalid);
 }
 
 export function createQuoteSchema(m: Messages) {
-  return createQuoteFieldsSchema(m).extend({ photos: createPhotosSchema(m) });
+  return z
+    .object({
+      name: z.string().trim().min(2, m.nameRequired).max(100, m.nameRequired),
+      email: z.string().trim().max(200, m.emailInvalid).pipe(z.email(m.emailInvalid)),
+      phone: z
+        .string()
+        .trim()
+        .max(30, m.phoneInvalid)
+        .refine((v) => v === "" || /^[+()\d\s.-]{6,30}$/.test(v), m.phoneInvalid),
+      profile: z.enum(PROFILE_VALUES, m.profileRequired),
+      propertyType: z.enum(PROPERTY_VALUES, m.propertyTypeRequired),
+      area: z
+        .string()
+        .trim()
+        .refine((v) => isIntBetween(v, 5, 5000), m.areaInvalid),
+      units: z.string().trim().max(5, m.unitsInvalid),
+      city: z.string().trim().min(2, m.cityRequired).max(100, m.cityRequired),
+      website: optionalUrl(m),
+      videosLink: optionalUrl(m),
+      message: z.string().trim().min(10, m.messageTooShort).max(3000, m.messageTooLong),
+      consent: z.boolean(m.consentRequired).refine((v) => v, m.consentRequired),
+      /** Honeypot : doit rester vide (vérifié séparément côté serveur). */
+      company: z.string().max(0).optional(),
+    })
+    .superRefine((data, ctx) => {
+      // Le nombre de logements n'est demandé qu'aux conciergeries.
+      const required = data.profile === "conciergerie";
+      if ((required || data.units !== "") && !isIntBetween(data.units, 1, 5000)) {
+        ctx.addIssue({ code: "custom", path: ["units"], message: m.unitsInvalid });
+      }
+    });
 }
 
-export type QuoteFieldsInput = z.input<ReturnType<typeof createQuoteFieldsSchema>>;
-export type QuoteFields = z.output<ReturnType<typeof createQuoteFieldsSchema>>;
+export type QuoteInput = z.input<ReturnType<typeof createQuoteSchema>>;
 export type QuoteData = z.output<ReturnType<typeof createQuoteSchema>>;
 
 /** Réponse JSON de /api/devis. */
 export type QuoteResponse =
   | { ok: true }
-  | { ok: false; error: "validation" | "turnstile" | "rate_limit" | "too_large" | "server"; fields?: string[] };
+  | { ok: false; error: "validation" | "turnstile" | "rate_limit" | "server"; fields?: string[] };

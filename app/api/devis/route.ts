@@ -1,19 +1,17 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { getContent } from "@/content";
-import { createQuoteSchema, PHOTO_LIMITS, type QuoteResponse } from "@/lib/schemas";
+import { createQuoteSchema, type QuoteResponse } from "@/lib/schemas";
 import { verifyTurnstile } from "@/lib/turnstile";
-import { sendEmail, filesToAttachments, internalEmail, confirmationEmail } from "@/lib/email";
+import { sendEmail, internalEmail, confirmationEmail } from "@/lib/email";
 
 /**
- * POST /api/devis : traitement du formulaire de demande de devis.
+ * POST /api/devis : traitement du formulaire de demande de devis (JSON).
  * Runtime Node.js (par défaut avec OpenNext). Ne JAMAIS ajouter `runtime = "edge"`.
  *
  * Étapes : limitation de débit → taille → honeypot → Turnstile → zod → emails.
  */
 
-/** Marge pour les champs texte et l'encodage multipart, en plus des photos. */
-const MAX_BODY_BYTES = PHOTO_LIMITS.maxTotalBytes + 2 * 1024 * 1024;
-
+const MAX_BODY_BYTES = 32 * 1024;
 const quoteSchema = createQuoteSchema(getContent().form.validation);
 
 function json(body: QuoteResponse, status = 200) {
@@ -31,46 +29,36 @@ export async function POST(request: Request) {
       if (!success) return json({ ok: false, error: "rate_limit" }, 429);
     }
 
-    // 2. Taille du corps (avant de le lire entièrement).
-    const length = Number(request.headers.get("content-length") ?? 0);
-    if (length > MAX_BODY_BYTES) return json({ ok: false, error: "too_large" }, 413);
-
-    const formData = await request.formData();
+    // 2. Taille et format du corps.
+    const raw = await request.text();
+    if (raw.length > MAX_BODY_BYTES) return json({ ok: false, error: "validation" }, 413);
+    let body: Record<string, unknown>;
+    try {
+      const parsed: unknown = JSON.parse(raw);
+      if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) throw new Error();
+      body = parsed as Record<string, unknown>;
+    } catch {
+      return json({ ok: false, error: "validation" }, 400);
+    }
 
     // 3. Honeypot : un robot remplit ce champ caché. On répond « succès » sans rien envoyer.
-    const honeypot = formData.get("website");
-    if (typeof honeypot === "string" && honeypot.length > 0) return json({ ok: true });
+    if (typeof body.company === "string" && body.company.length > 0) return json({ ok: true });
 
     // 4. Turnstile.
-    const token = formData.get("cf-turnstile-response");
-    const human = await verifyTurnstile(typeof token === "string" ? token : "", env.TURNSTILE_SECRET_KEY, ip);
+    const token = typeof body.turnstileToken === "string" ? body.turnstileToken : "";
+    const human = await verifyTurnstile(token, env.TURNSTILE_SECRET_KEY, ip);
     if (!human) return json({ ok: false, error: "turnstile" }, 400);
 
     // 5. Validation avec le même schéma que le client.
-    const text = (key: string) => {
-      const value = formData.get(key);
-      return typeof value === "string" ? value : "";
-    };
-    const parsed = quoteSchema.safeParse({
-      name: text("name"),
-      email: text("email"),
-      phone: text("phone"),
-      profile: text("profile"),
-      rooms: text("rooms"),
-      style: text("style"),
-      message: text("message"),
-      consent: text("consent") === "true",
-      website: "",
-      photos: formData.getAll("photos").filter((v): v is File => v instanceof File && v.size > 0),
-    });
+    const parsed = quoteSchema.safeParse({ ...body, company: "" });
     if (!parsed.success) {
       const fields = [...new Set(parsed.error.issues.map((i) => String(i.path[0] ?? "")))];
       return json({ ok: false, error: "validation", fields }, 400);
     }
     const data = parsed.data;
 
-    // 6. Email interne avec les photos en pièces jointes.
-    const internal = internalEmail(data, data.photos.length);
+    // 6. Email interne.
+    const internal = internalEmail(data);
     const sent = await sendEmail({
       apiKey: env.RESEND_API_KEY,
       from: env.CONTACT_EMAIL_FROM,
@@ -79,11 +67,10 @@ export async function POST(request: Request) {
       subject: internal.subject,
       html: internal.html,
       text: internal.text,
-      attachments: await filesToAttachments(data.photos),
     });
     if (!sent) return json({ ok: false, error: "server" }, 502);
 
-    // 7. Confirmation au client (un échec ici ne bloque pas la demande).
+    // 7. Confirmation au client, avec le guide de tournage (un échec ici ne bloque pas la demande).
     const confirmation = confirmationEmail(data);
     await sendEmail({
       apiKey: env.RESEND_API_KEY,

@@ -8,18 +8,27 @@ export function Audiences() {
   const { audiences } = getContent();
 
   return (
-    <section id="pour-qui" aria-labelledby="pour-qui-title" className="border-t border-line py-24 sm:py-32 lg:py-40">
+    <section id="pour-qui" aria-labelledby="pour-qui-title" className="py-24 sm:py-32 lg:py-40">
       <Container size="wide">
         <SectionHeading id="pour-qui-title" eyebrow={audiences.eyebrow} title={audiences.title} />
 
-        <RevealGroup as="ul" className="mt-16 grid gap-12 lg:mt-20 lg:grid-cols-3 lg:gap-0 lg:divide-x lg:divide-line">
-          {audiences.items.map((audience) => (
-            <RevealItem as="li" key={audience.title} className="max-lg:max-w-xl lg:px-12 lg:first:pl-0 lg:last:pr-0">
-              <span className="flex size-14 items-center justify-center rounded-full border border-line text-clay">
-                <Icon name={audience.icon} className="size-6" />
-              </span>
-              <h3 className="mt-8 font-serif text-3xl leading-tight">{audience.title}</h3>
-              <p className="mt-4 text-lg leading-relaxed text-stone">{audience.benefit}</p>
+        <RevealGroup as="ul" className="mt-16 grid gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
+          {audiences.items.map((audience, i) => (
+            <RevealItem
+              as="li"
+              key={audience.title}
+              className="flex flex-col rounded-2xl border border-line p-7 sm:p-8"
+            >
+              <div className="flex items-start justify-between">
+                <span className="flex size-12 items-center justify-center rounded-full border border-line text-clay">
+                  <Icon name={audience.icon} className="size-5" />
+                </span>
+                <span className="font-serif text-lg text-stone/70" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <h3 className="mt-10 font-serif text-2xl leading-tight">{audience.title}</h3>
+              <p className="mt-3 leading-relaxed text-stone">{audience.description}</p>
             </RevealItem>
           ))}
         </RevealGroup>

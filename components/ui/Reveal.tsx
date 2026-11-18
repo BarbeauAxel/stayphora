@@ -1,61 +1,47 @@
-"use client";
+import type { CSSProperties, ReactNode } from "react";
 
-import * as m from "motion/react-m";
-import type { Variants } from "motion/react";
-import type { ReactNode } from "react";
+/**
+ * Apparition au scroll (fondu + translation de 20 px), en CSS pur.
+ * Ces composants sont rendus côté serveur : un seul IntersectionObserver
+ * global (RevealObserver) ajoute la classe `is-revealed`. Aucun JavaScript
+ * par élément, donc une hydratation bien plus légère. Sans JavaScript, le
+ * contenu reste visible (les styles ne s'appliquent que sous `html.js`).
+ * Voir les règles `[data-reveal]` dans app/globals.css.
+ */
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+type Tag = "div" | "li" | "ul" | "ol" | "section" | "article";
 
-const item: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } },
-};
-
-interface RevealProps {
+export function Reveal({
+  children,
+  className,
+  delay = 0,
+  as: Component = "div",
+}: {
   children: ReactNode;
   className?: string;
   delay?: number;
-  as?: "div" | "li" | "section" | "article";
-}
-
-/** Apparition au scroll : fondu + translation de 20 px vers le haut. */
-export function Reveal({ children, className, delay = 0, as = "div" }: RevealProps) {
-  const Component = m[as];
+  as?: Tag;
+}) {
+  const style = delay ? ({ "--reveal-delay": `${delay}s` } as CSSProperties) : undefined;
   return (
-    <Component
-      className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-      variants={item}
-      transition={{ delay }}
-    >
+    <Component data-reveal="" className={className} style={style}>
       {children}
     </Component>
   );
 }
 
-/** Conteneur qui décale l'apparition de ses `RevealItem` (stagger). */
+/** Conteneur dont les `RevealItem` apparaissent en décalé (stagger). */
 export function RevealGroup({
   children,
   className,
-  as = "div",
-  stagger = 0.1,
+  as: Component = "div",
 }: {
   children: ReactNode;
   className?: string;
-  as?: "div" | "ul" | "ol";
-  stagger?: number;
+  as?: Tag;
 }) {
-  const Component = m[as];
   return (
-    <Component
-      className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-      variants={{ hidden: {}, visible: { transition: { staggerChildren: stagger } } }}
-    >
+    <Component data-reveal-group="" className={className}>
       {children}
     </Component>
   );
@@ -64,15 +50,14 @@ export function RevealGroup({
 export function RevealItem({
   children,
   className,
-  as = "div",
+  as: Component = "div",
 }: {
   children: ReactNode;
   className?: string;
-  as?: "div" | "li" | "article";
+  as?: Tag;
 }) {
-  const Component = m[as];
   return (
-    <Component className={className} variants={item}>
+    <Component data-reveal-item="" className={className}>
       {children}
     </Component>
   );

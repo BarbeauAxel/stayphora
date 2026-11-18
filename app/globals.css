@@ -117,6 +117,84 @@
   }
 }
 
+/* ── Apparition au scroll (voir components/ui/Reveal.tsx) ───────────────── */
+/* Uniquement si JavaScript est actif (classe `js` posée dans <head>). */
+.js [data-reveal],
+.js [data-reveal-group] > [data-reveal-item] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.8s var(--ease-soft),
+    transform 0.8s var(--ease-soft);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.js [data-reveal].is-revealed,
+.js [data-reveal-group].is-revealed > [data-reveal-item] {
+  opacity: 1;
+  transform: none;
+}
+/* Décalage (stagger) des éléments d'une grille. */
+[data-reveal-group] > [data-reveal-item]:nth-child(2) {
+  --reveal-delay: 0.1s;
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(3) {
+  --reveal-delay: 0.2s;
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(4) {
+  --reveal-delay: 0.3s;
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(5) {
+  --reveal-delay: 0.4s;
+}
+[data-reveal-group] > [data-reveal-item]:nth-child(n + 6) {
+  --reveal-delay: 0.5s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .js [data-reveal-group] > [data-reveal-item] {
+    transform: none;
+    transition: opacity 0.3s linear;
+    transition-delay: 0s;
+  }
+}
+
+/* ── Visite 3D ─────────────────────────────────────────────────────────── */
+@keyframes tour-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+@keyframes tour-drag {
+  0%,
+  100% {
+    transform: translateX(-14px) rotate(-8deg);
+  }
+  50% {
+    transform: translateX(14px) rotate(8deg);
+  }
+}
+/* Plein écran natif : le cadre perd ses coins arrondis. */
+.tour-frame:fullscreen {
+  border-radius: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+/* Repli « plein écran » en CSS (iPhone, où l'API Fullscreen n'existe pas pour les éléments). */
+.tour-pseudo-fullscreen {
+  position: fixed !important;
+  inset: 0;
+  z-index: 100;
+  width: 100% !important;
+  height: 100dvh !important;
+  max-width: none !important;
+  aspect-ratio: auto !important;
+  border-radius: 0 !important;
+}
+
 /* Ouverture de la modale <dialog>. */
 .modal[open] {
   animation: modal-in 0.5s var(--ease-soft);

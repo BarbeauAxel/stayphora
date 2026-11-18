@@ -7,24 +7,24 @@ import type { Content } from "../types";
 export const testimonials: Content["testimonials"] = {
   enabled: false,
   eyebrow: "Témoignages",
-  title: "Ils ont vu leur logement *autrement*.",
+  title: "Ils font déjà *visiter* leurs logements.",
   items: [
     {
-      quote: "[Témoignage à remplacer] Citation d'un hôte sur le résultat et la rapidité.",
-      name: "[Prénom N.]",
-      role: "Hôte Airbnb",
-      city: "[Ville]",
-    },
-    {
-      quote: "[Témoignage à remplacer] Citation d'une conciergerie sur la valeur ajoutée pour ses propriétaires.",
+      quote: "[Témoignage à remplacer] Citation d'une conciergerie sur la signature de nouveaux propriétaires.",
       name: "[Prénom N.]",
       role: "Conciergerie",
       city: "[Ville]",
     },
     {
-      quote: "[Témoignage à remplacer] Citation d'un agent ou d'un investisseur sur la projection de ses clients.",
+      quote: "[Témoignage à remplacer] Citation d'un propriétaire de gîte sur les réservations directes.",
       name: "[Prénom N.]",
-      role: "Agent immobilier",
+      role: "Propriétaire de gîte",
+      city: "[Ville]",
+    },
+    {
+      quote: "[Témoignage à remplacer] Citation d'un hôte sur les questions évitées avant l'arrivée.",
+      name: "[Prénom N.]",
+      role: "Hôte Airbnb",
       city: "[Ville]",
     },
   ],

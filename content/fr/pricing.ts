@@ -1,38 +1,35 @@
 import type { Content } from "../types";
 
-// [À remplacer] prix réels : remplacer les « [XX €] » et ajuster les inclusions
+// [À remplacer] prix réels (« [XX €] ») et durée d'hébergement (« [X mois] »)
+const included = [
+  "Reconstruction 3D photoréaliste",
+  "Points de vue par pièce",
+  "Visite guidée automatique",
+  "Lien de partage et QR code",
+  "Code d'intégration pour votre site",
+  "Hébergement de la visite pendant [X mois]",
+  "Une retouche incluse",
+];
+
 export const pricing: Content["pricing"] = {
   eyebrow: "Tarifs",
-  title: "Des tarifs *clairs*, sans surprise.",
-  description: "Vous ne payez qu'après avoir validé vos rendus.",
+  title: "Une visite, un prix *clair*.",
+  description: "Devis gratuit. Vous ne payez qu'une fois la visite validée.",
   plans: [
     {
-      name: "Pièce unique",
+      name: "Studio / T2",
       price: "[XX €]",
-      unit: "par pièce",
-      description: "Pour tester une idée ou repenser l'espace clé de votre logement.",
-      features: [
-        "1 pièce, 2 styles au choix",
-        "2 rendus HD par style",
-        "1 série de retouches incluse",
-        "Liste d'idées déco et mobilier",
-        "Livraison sous 48 h",
-      ],
+      unit: "par logement",
+      description: "Jusqu'à 3 pièces. Idéal pour les studios, T1 et T2.",
+      features: included,
       cta: "Demander un devis",
     },
     {
-      name: "Logement complet",
+      name: "Maison / grand logement",
       price: "[XX €]",
       unit: "par logement",
-      description: "Une vision cohérente de tout le logement, pièce par pièce.",
-      features: [
-        "Jusqu'à 5 pièces",
-        "1 style harmonisé et 1 variante",
-        "Rendus HD de chaque pièce",
-        "2 séries de retouches incluses",
-        "Liste de mobilier avec liens d'achat",
-        "Livraison sous 48 à 72 h",
-      ],
+      description: "Maisons, villas, gîtes et grands appartements, sans limite de pièces.",
+      features: [...included.slice(0, 6), "Extérieurs inclus (terrasse, jardin)", "Une retouche incluse"],
       cta: "Demander un devis",
       highlighted: true,
       badge: "Le plus choisi",
@@ -40,17 +37,18 @@ export const pricing: Content["pricing"] = {
     {
       name: "Conciergeries",
       price: "Sur devis",
-      unit: "pour les volumes",
-      description: "Pour les conciergeries et gestionnaires qui accompagnent de nombreux propriétaires.",
+      unit: "tarifs dégressifs",
+      description: "Pour les conciergeries et gestionnaires qui valorisent tout un parc de logements.",
       features: [
         "Tarifs dégressifs au volume",
+        "Visites en marque blanche",
+        "Page de visite à vos couleurs",
         "Interlocuteur dédié",
-        "Rendus en marque blanche",
         "Délais prioritaires",
         "Facturation mensuelle",
       ],
-      cta: "Parler de votre volume",
+      cta: "Parler de votre parc",
     },
   ],
-  note: "Retouches supplémentaires et pièces additionnelles sur simple demande.",
+  note: "Visites supplémentaires, mises à jour après travaux et hébergement prolongé sur simple demande.",
 };

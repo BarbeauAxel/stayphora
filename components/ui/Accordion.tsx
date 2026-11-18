@@ -2,13 +2,15 @@
 
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
-import { Plus } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Plus } from "lucide-react";
 import { useId, useState } from "react";
 import { cn } from "@/lib/cn";
 
 export interface AccordionItem {
   question: string;
   answer: string;
+  link?: { label: string; href: string };
 }
 
 /** Accordéon accessible : `button` + `aria-expanded` + `aria-controls`. */
@@ -59,7 +61,18 @@ export function Accordion({ items, className }: { items: AccordionItem[]; classN
                   transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                   className="overflow-hidden"
                 >
-                  <p className="max-w-2xl pb-7 pr-12 leading-relaxed text-stone">{item.answer}</p>
+                  <div className="max-w-2xl pr-12 pb-7">
+                    <p className="leading-relaxed text-stone">{item.answer}</p>
+                    {item.link && (
+                      <Link
+                        href={item.link.href}
+                        className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-clay-deep underline decoration-clay/40 underline-offset-4 hover:decoration-clay-deep"
+                      >
+                        {item.link.label}
+                        <ArrowRight className="size-4" strokeWidth={1.5} aria-hidden="true" />
+                      </Link>
+                    )}
+                  </div>
                 </m.div>
               )}
             </AnimatePresence>

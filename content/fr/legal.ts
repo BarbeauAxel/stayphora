@@ -28,33 +28,34 @@ export const legal: Content["legal"] = {
       {
         title: "Hébergement",
         paragraphs: [
-          "Le site est hébergé par Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis (www.cloudflare.com).",
+          "Le site et les visites 3D sont hébergés par Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis (www.cloudflare.com).",
         ],
       },
       {
         title: "Propriété intellectuelle",
         paragraphs: [
-          "L'ensemble des contenus de ce site (textes, visuels, rendus, logo, mise en page) est la propriété de Stayphora ou de ses partenaires, sauf mention contraire. Toute reproduction, totale ou partielle, sans autorisation écrite préalable est interdite.",
-          "Les rendus présentés sont des visualisations générées par intelligence artificielle puis retouchées. Ils ne constituent pas des photographies de logements réels après travaux.",
+          "L'ensemble des contenus de ce site (textes, visuels, visites 3D, logo, mise en page) est la propriété de Stayphora ou de ses partenaires, sauf mention contraire. Toute reproduction, totale ou partielle, sans autorisation écrite préalable est interdite.",
+          "Les visites 3D sont des reconstructions générées par intelligence artificielle à partir d'images réelles du logement. Elles montrent le logement tel qu'il était au moment de la prise de vue.",
+          "Les scènes de démonstration « Appartement » et « Loft » proviennent du jeu de données Eyeful Tower (© Meta Platforms, Inc. et affiliés), diffusé sous licence MIT, entraînées avec SplatCast puis recadrées et compressées par Stayphora, tout comme la photo source illustrant « Ce que vous filmez ». Aucun soutien de Meta n'est sous-entendu.",
         ],
       },
       {
         title: "Responsabilité",
         paragraphs: [
-          "Stayphora s'efforce de fournir des informations exactes et à jour, sans pouvoir en garantir l'exhaustivité. Stayphora ne saurait être tenue responsable de l'usage fait des informations et rendus présentés sur ce site.",
+          "Stayphora s'efforce de fournir des informations exactes et à jour, sans pouvoir en garantir l'exhaustivité. Une visite 3D peut comporter de légères imperfections de reconstruction (reflets, zones peu filmées) qui ne constituent pas une description contractuelle du logement.",
         ],
       },
       {
         title: "Données personnelles",
         paragraphs: [
-          "Le traitement des données collectées via le formulaire de devis est décrit dans notre politique de confidentialité.",
+          "Le traitement des données collectées via le formulaire de devis et des images des logements est décrit dans notre politique de confidentialité.",
         ],
       },
     ],
   },
   privacy: {
     title: "Politique de confidentialité",
-    description: "Comment Stayphora collecte, utilise et protège vos données personnelles.",
+    description: "Comment Stayphora collecte, utilise et protège vos données personnelles et les images de votre logement.",
     updated: "Dernière mise à jour : [date]",
     sections: [
       {
@@ -64,33 +65,37 @@ export const legal: Content["legal"] = {
         ],
       },
       {
-        title: "Données collectées",
-        paragraphs: ["Lorsque vous remplissez le formulaire de demande de devis, nous collectons :"],
+        title: "Données collectées via le formulaire",
+        paragraphs: ["Lorsque vous demandez un devis, nous collectons :"],
         list: [
-          "votre prénom et votre nom ;",
-          "votre adresse email ;",
-          "votre numéro de téléphone (facultatif) ;",
-          "votre profil (hôte, conciergerie, agent immobilier, autre) ;",
-          "les informations sur votre projet (nombre de pièces, style, message) ;",
-          "les photos de votre logement que vous choisissez de nous transmettre.",
+          "votre prénom et votre nom, votre adresse email et, si vous le souhaitez, votre téléphone ;",
+          "votre profil (conciergerie, propriétaire, hôte, agent immobilier, autre) ;",
+          "les informations sur le logement : type, surface, ville, nombre de logements ;",
+          "les liens que vous choisissez de nous transmettre (site, annonce, vidéos déjà filmées) ;",
+          "votre message.",
+        ],
+      },
+      {
+        title: "Images et vidéos des logements",
+        paragraphs: [
+          "Les vidéos et photos que vous nous transmettez servent uniquement à reconstruire la visite 3D de votre logement. Avant livraison, nous pouvons flouter ou retirer les objets personnels, les photos de famille, les documents et toute personne apparaissant par inadvertance.",
+          "Vos images ne sont jamais utilisées pour entraîner des modèles d'IA, ni publiées comme réalisation sans votre accord écrit. La visite livrée est publiée à l'adresse que vous choisissez de partager ; elle n'est pas référencée sur notre site sans votre accord.",
         ],
       },
       {
         title: "Finalités et bases légales",
         paragraphs: [
-          "Vos données servent uniquement à répondre à votre demande, à établir un devis et, le cas échéant, à réaliser la prestation. Ce traitement repose sur l'exécution de mesures précontractuelles prises à votre demande (article 6.1.b du RGPD).",
+          "Vos données servent à répondre à votre demande, à établir un devis et à réaliser la prestation. Ce traitement repose sur l'exécution de mesures précontractuelles prises à votre demande, puis du contrat (article 6.1.b du RGPD).",
           "La protection du formulaire contre le spam et les abus (vérification Cloudflare Turnstile, limitation du nombre de requêtes) repose sur notre intérêt légitime à sécuriser le service (article 6.1.f du RGPD).",
-          "Vos données ne sont jamais vendues ni utilisées à des fins publicitaires. Vos photos ne sont pas utilisées pour entraîner des modèles d'IA ni publiées sans votre accord écrit.",
         ],
       },
       {
         title: "Destinataires et sous-traitants",
-        paragraphs: [
-          "Vos données sont destinées à Stayphora uniquement. Nous faisons appel aux sous-traitants suivants :",
-        ],
+        paragraphs: ["Vos données sont destinées à Stayphora uniquement. Nous faisons appel aux sous-traitants suivants :"],
         list: [
-          "Cloudflare, Inc. (États-Unis) : hébergement du site et protection anti-spam (Turnstile) ;",
-          "Resend, Inc. (États-Unis) : acheminement des emails liés à votre demande, y compris les photos jointes.",
+          "Cloudflare, Inc. (États-Unis) : hébergement du site et des visites 3D (Workers, R2), protection anti-spam (Turnstile) ;",
+          "Resend, Inc. (États-Unis) : acheminement des emails liés à votre demande ;",
+          "le service de transfert de fichiers que vous choisissez (WeTransfer, Google Drive, Dropbox…) pour l'envoi de vos vidéos.",
         ],
       },
       {
@@ -102,7 +107,7 @@ export const legal: Content["legal"] = {
       {
         title: "Durée de conservation",
         paragraphs: [
-          "Les données d'une demande de devis sans suite sont conservées au maximum 3 ans à compter du dernier contact. Les photos transmises sont supprimées au plus tard [12 mois] après la fin de la prestation ou de l'échange. Les données des clients sont conservées pendant la durée de la relation commerciale, puis archivées selon les obligations légales (notamment comptables, 10 ans pour les factures).",
+          "Les données d'une demande de devis sans suite sont conservées au maximum 3 ans à compter du dernier contact. Les vidéos et photos sources sont supprimées au plus tard [3 mois] après la livraison de la visite. La visite 3D reste en ligne pendant la durée d'hébergement prévue au devis, puis est supprimée. Les données de facturation sont archivées 10 ans (obligation comptable).",
         ],
       },
       {
@@ -113,13 +118,12 @@ export const legal: Content["legal"] = {
       },
       {
         title: "Vos droits",
-        paragraphs: [
-          "Conformément au RGPD et à la loi Informatique et Libertés, vous disposez des droits suivants sur vos données :",
-        ],
+        paragraphs: ["Conformément au RGPD et à la loi Informatique et Libertés, vous disposez des droits suivants :"],
         list: [
           "droit d'accès, de rectification et d'effacement ;",
           "droit à la limitation du traitement et droit d'opposition ;",
           "droit à la portabilité ;",
+          "droit de demander le retrait d'une visite publiée ;",
           "droit de définir des directives relatives au sort de vos données après votre décès.",
         ],
       },

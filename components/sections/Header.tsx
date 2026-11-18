@@ -76,7 +76,10 @@ export function Header({ site }: { site: SiteContent }) {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,color] duration-500 ease-soft",
-        solid && !menuOpen ? "border-b border-line bg-cream/80 backdrop-blur-md" : "border-b border-transparent",
+        solid && !menuOpen
+          ? "border-b border-line bg-cream/80 backdrop-blur-md"
+          : // Au-dessus du hero : léger voile pour garantir la lisibilité du texte blanc sur la vidéo.
+            cn("border-b border-transparent", light && "bg-linear-to-b from-black/45 to-transparent"),
         light ? "text-white" : "text-ink",
       )}
     >
