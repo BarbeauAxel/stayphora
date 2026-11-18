@@ -1,0 +1,22 @@
+# En-têtes appliqués par Cloudflare aux fichiers statiques (Workers Static Assets).
+# Le Worker ne s'exécute pas devant ces fichiers : les headers() de next.config.ts
+# ne s'y appliquent pas, d'où ce fichier.
+# Doc : https://developers.cloudflare.com/workers/static-assets/headers/
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+
+# Fichiers versionnés par Next.js (hash dans le nom) : cache d'un an.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Images, vidéos et polices de /public.
+# Ils ne sont pas versionnés : en cas de remplacement, changez le nom du fichier.
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+/videos/*
+  Cache-Control: public, max-age=31536000, immutable
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable

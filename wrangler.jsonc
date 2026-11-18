@@ -1,0 +1,64 @@
+/**
+ * Configuration du Worker Cloudflare (Stayphora).
+ * Doc : https://developers.cloudflare.com/workers/wrangler/configuration/
+ *       https://opennext.js.org/cloudflare/get-started
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "stayphora",
+  // Point d'entrée généré par `opennextjs-cloudflare build`. Ne pas modifier.
+  "main": ".open-next/worker.js",
+  // Ne jamais mettre une date dans le futur.
+  "compatibility_date": "2026-11-18",
+  "compatibility_flags": [
+    // Requis par OpenNext (APIs Node.js dans le runtime Workers).
+    "nodejs_compat",
+    // Empêche `fetch()` d'appeler des adresses privées (bonne pratique de sécurité).
+    "global_fetch_strictly_public"
+  ],
+  // Fichiers statiques (public/, _next/static, pages pré-rendues).
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Optimisation de next/image via Cloudflare Images.
+  "images": {
+    "binding": "IMAGES"
+  },
+  // Limitation du débit sur /api/devis : 5 requêtes / 60 s / IP.
+  // `namespace_id` est un identifiant arbitraire, unique dans votre compte.
+  "ratelimits": [
+    {
+      "name": "DEVIS_RATE_LIMITER",
+      "namespace_id": "2001",
+      "simple": { "limit": 5, "period": 60 }
+    }
+  ],
+  // Variables non secrètes. Les secrets (RESEND_API_KEY, TURNSTILE_SECRET_KEY)
+  // se définissent avec `npx wrangler secret put <NOM>` et dans `.dev.vars` en local.
+  "vars": {
+    "CONTACT_EMAIL_TO": "contact@stayphora.fr",
+    "CONTACT_EMAIL_FROM": "Stayphora <devis@stayphora.fr>"
+  },
+  // Domaines personnalisés : Cloudflare crée les enregistrements DNS et le certificat.
+  // www.stayphora.fr est redirigé (301) vers stayphora.fr par une Redirect Rule
+  // Cloudflare, appliquée avant le Worker (voir README).
+  "routes": [
+    { "pattern": "stayphora.fr", "custom_domain": true },
+    { "pattern": "www.stayphora.fr", "custom_domain": true }
+  ],
+  "observability": {
+    "enabled": true
+  }
+
+  /*
+   * Pour activer l'ISR plus tard (voir open-next.config.ts), ajouter :
+   *
+   * "r2_buckets": [
+   *   { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "stayphora-inc-cache" }
+   * ],
+   * "services": [
+   *   { "binding": "WORKER_SELF_REFERENCE", "service": "stayphora" }
+   * ]
+   */
+}

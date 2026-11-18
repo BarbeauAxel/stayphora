@@ -1,0 +1,12 @@
+# Copier ce fichier en `.dev.vars` (ignoré par git) pour `npm run dev` et `npm run preview`.
+NEXTJS_ENV=development
+
+# Clé API Resend (https://resend.com/api-keys)
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxx
+
+# Clé secrète Turnstile. Valeur ci-dessous : clé de TEST Cloudflare (valide toujours).
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+
+# (optionnel) surcharger les vars de wrangler.jsonc en local
+# CONTACT_EMAIL_TO=vous@exemple.fr
+# CONTACT_EMAIL_FROM=Stayphora <onboarding@resend.dev>
