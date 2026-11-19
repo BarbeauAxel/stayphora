@@ -42,7 +42,7 @@
     {
       "binding": "DB",
       "database_name": "stayphora",
-      "database_id": "REMPLACER-PAR-L-ID-DE-wrangler-d1-create",
+      "database_id": "932f5dde-022e-4d51-9438-f5d4d7c35f77",
       "migrations_dir": "migrations"
     }
   ],
