@@ -33,10 +33,13 @@ export const reassurance: Content["reassurance"] = [
 export const demo: Content["demo"] = {
   eyebrow: "Démo",
   title: "Ne nous croyez pas sur parole. *Entrez.*",
-  description: "Cette visite a été reconstruite à partir de simples photos du logement. Déplacez-vous librement, pièce par pièce.",
+  description: "Scène d'exemple reconstruite par Gaussian Splatting. Déplacez-vous librement, pièce par pièce.",
   moreDemos: "Autres visites",
   openFullscreen: "Ouvrir en plein écran",
   compare: {
+    // Masqué tant qu'il n'y a pas de scans Stayphora réalisés au smartphone
+    // (les scènes d'exemple ont été capturées avec un dispositif photo professionnel).
+    enabled: false,
     title: "De la prise de vue à la visite",
     filmed: {
       label: "Ce que vous filmez",

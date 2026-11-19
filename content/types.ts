@@ -179,6 +179,8 @@ export interface DemoContent extends SectionIntro {
   moreDemos: string;
   openFullscreen: string;
   compare: {
+    /** Affiche le bloc « Ce que vous filmez / Ce que vos voyageurs explorent ». */
+    enabled: boolean;
     title: string;
     filmed: { label: string; caption: string; image: Image };
     explored: { label: string; caption: string; image: Image };
