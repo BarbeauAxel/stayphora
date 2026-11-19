@@ -3,16 +3,27 @@ import { getContent } from "@/content";
 import { createQuoteSchema, type QuoteResponse } from "@/lib/schemas";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { sendEmail, internalEmail, confirmationEmail } from "@/lib/email";
+import { saveQuote, markQuoteEmails } from "@/lib/quotes";
 
 /**
  * POST /api/devis : traitement du formulaire de demande de devis (JSON).
  * Runtime Node.js (par défaut avec OpenNext). Ne JAMAIS ajouter `runtime = "edge"`.
  *
- * Étapes : limitation de débit → taille → honeypot → Turnstile → zod → emails.
+ * Étapes : limitation de débit → taille → honeypot → Turnstile → zod → D1 → emails.
  */
 
 const MAX_BODY_BYTES = 32 * 1024;
 const quoteSchema = createQuoteSchema(getContent().form.validation);
+
+/** Envoi d'email qui ne lève jamais d'exception (erreur réseau comprise). */
+async function safeSend(params: Parameters<typeof sendEmail>[0]): Promise<boolean> {
+  try {
+    return await sendEmail(params);
+  } catch (error) {
+    console.error("[devis] envoi d'email impossible", error);
+    return false;
+  }
+}
 
 function json(body: QuoteResponse, status = 200) {
   return Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
@@ -57,9 +68,15 @@ export async function POST(request: Request) {
     }
     const data = parsed.data;
 
-    // 6. Email interne.
+    // 6. Enregistrement dans D1 AVANT tout envoi : la demande n'est jamais perdue.
+    //    Le binding peut être absent (dev sans D1) : la demande continue.
+    const db: D1Database | undefined = env.DB;
+    const quoteId = crypto.randomUUID();
+    const stored = await saveQuote(db, quoteId, data);
+
+    // 7. Email interne.
     const internal = internalEmail(data);
-    const sent = await sendEmail({
+    const internalSent = await safeSend({
       apiKey: env.RESEND_API_KEY,
       from: env.CONTACT_EMAIL_FROM,
       to: [env.CONTACT_EMAIL_TO],
@@ -68,11 +85,15 @@ export async function POST(request: Request) {
       html: internal.html,
       text: internal.text,
     });
-    if (!sent) return json({ ok: false, error: "server" }, 502);
+    if (!internalSent) {
+      console.error(`[devis] email interne non envoyé (demande ${stored ? `enregistrée : ${quoteId}` : "NON enregistrée"})`);
+      // Échec seulement si la demande n'a été ni enregistrée ni transmise.
+      if (!stored) return json({ ok: false, error: "server" }, 502);
+    }
 
-    // 7. Confirmation au client, avec le guide de tournage (un échec ici ne bloque pas la demande).
+    // 8. Confirmation au client, avec le guide de tournage (un échec ici ne bloque pas la demande).
     const confirmation = confirmationEmail(data);
-    await sendEmail({
+    const confirmationSent = await safeSend({
       apiKey: env.RESEND_API_KEY,
       from: env.CONTACT_EMAIL_FROM,
       to: [data.email],
@@ -81,6 +102,8 @@ export async function POST(request: Request) {
       html: confirmation.html,
       text: confirmation.text,
     });
+
+    if (stored) await markQuoteEmails(db, quoteId, { internal: internalSent, confirmation: confirmationSent });
 
     return json({ ok: true });
   } catch (error) {

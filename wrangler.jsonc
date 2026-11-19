@@ -35,6 +35,17 @@
       "simple": { "limit": 5, "period": 60 }
     }
   ],
+  // Base D1 : chaque demande de devis y est enregistrée (une demande n'est jamais
+  // perdue si un email échoue). Créer la base : npx wrangler d1 create stayphora --location weur
+  // puis remplacer database_id par l'identifiant affiché. Migrations : dossier migrations/.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "stayphora",
+      "database_id": "REMPLACER-PAR-L-ID-DE-wrangler-d1-create",
+      "migrations_dir": "migrations"
+    }
+  ],
   // Variables non secrètes. Les secrets (RESEND_API_KEY, TURNSTILE_SECRET_KEY)
   // se définissent avec `npx wrangler secret put <NOM>` et dans `.dev.vars` en local.
   "vars": {

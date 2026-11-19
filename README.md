@@ -221,6 +221,22 @@ done
 Vérification : `curl -I -H "Origin: https://stayphora.fr" https://assets.stayphora.fr/tours/appartement.spz`
 doit renvoyer `200` et `Access-Control-Allow-Origin`.
 
+### 1 bis. Base D1 pour les demandes de devis
+Chaque demande est enregistrée dans D1 (table `quotes`) **avant** l'envoi des emails : elle n'est jamais
+perdue si Resend échoue. Le client reçoit `ok: true` dès que la demande est enregistrée **ou** transmise
+par email ; l'erreur n'apparaît que si les deux échouent.
+```bash
+npx wrangler d1 create stayphora --location weur
+# → copier le "database_id" affiché dans wrangler.jsonc (remplacer REMPLACER-PAR-L-ID-DE-wrangler-d1-create)
+npx wrangler d1 migrations apply stayphora --remote   # production
+npx wrangler d1 migrations apply stayphora --local    # développement (npm run dev / preview)
+```
+Consulter les demandes : dashboard → **Storage & Databases → D1 → stayphora → Console**, ou
+```bash
+npx wrangler d1 execute stayphora --remote --command "SELECT created_at, name, email, city, status, internal_email_sent FROM quotes ORDER BY created_at DESC LIMIT 20"
+```
+Les colonnes `internal_email_sent` / `confirmation_email_sent` (0 ou 1) signalent les emails non partis.
+
 ### 2. Turnstile
 Dashboard Cloudflare → **Turnstile** → **Add widget** : domaines `stayphora.fr` et `stayphora.com`,
 mode **Managed**. Récupérez la **Site Key** (`NEXT_PUBLIC_TURNSTILE_SITE_KEY`) et la **Secret Key**

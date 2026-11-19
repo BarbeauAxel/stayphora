@@ -93,7 +93,7 @@ export const legal: Content["legal"] = {
         title: "Destinataires et sous-traitants",
         paragraphs: ["Vos données sont destinées à Stayphora uniquement. Nous faisons appel aux sous-traitants suivants :"],
         list: [
-          "Cloudflare, Inc. (États-Unis) : hébergement du site et des visites 3D (Workers, R2), protection anti-spam (Turnstile) ;",
+          "Cloudflare, Inc. (États-Unis) : hébergement du site et des visites 3D (Workers, R2), stockage des demandes de devis dans une base de données Cloudflare D1 (emplacement principal : Europe de l'Ouest), protection anti-spam (Turnstile) ;",
           "Resend, Inc. (États-Unis) : acheminement des emails liés à votre demande ;",
           "le service de transfert de fichiers que vous choisissez (WeTransfer, Google Drive, Dropbox…) pour l'envoi de vos vidéos.",
         ],
