@@ -2,7 +2,7 @@
   "rules": [
     {
       "allowed": {
-        "origins": ["https://stayphora.fr", "https://www.stayphora.fr", "http://localhost:3000", "http://localhost:8787"],
+        "origins": ["https://stayphora.fr", "https://www.stayphora.fr", "https://visite.stayphora.fr", "http://localhost:3000", "http://localhost:8787"],
         "methods": ["GET", "HEAD"],
         "headers": ["range"]
       },

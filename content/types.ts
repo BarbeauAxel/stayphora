@@ -63,6 +63,11 @@ export interface Feature {
 export interface SiteContent {
   name: string;
   url: string;
+  /**
+   * Adresse publique et DÉFINITIVE des visites : <toursUrl>/<slug>.
+   * Ces URL sont intégrées chez les clients en iframe : ne jamais les changer.
+   */
+  toursUrl: string;
   tagline: string;
   description: string;
   email: string;

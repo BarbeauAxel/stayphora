@@ -10,6 +10,7 @@ import { Modal } from "@/components/ui/Modal";
 import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { ButtonLink } from "@/components/ui/Button";
 import { RichText } from "@/components/ui/RichText";
+import { tourHref } from "@/lib/tour-links";
 
 function meta(t: Tour) {
   return [t.kind, t.location, t.area ? `${t.area} m²` : null].filter(Boolean).join(" · ");
@@ -84,7 +85,7 @@ export function TourGallery({ tours, ui, labels }: { tours: Tour[]; ui: TourUiCo
                 <p className="mt-1 text-sm text-stone">{meta(active)}</p>
               </div>
               <Link
-                href={`/demo/${active.slug}`}
+                href={tourHref(active.slug)}
                 className="inline-flex items-center gap-2 text-sm text-clay-deep underline decoration-clay/40 underline-offset-4"
               >
                 <Expand className="size-4" strokeWidth={1.5} aria-hidden="true" />

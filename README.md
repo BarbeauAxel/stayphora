@@ -59,7 +59,8 @@ En local, laissez `NEXT_PUBLIC_ASSETS_URL` vide : les scènes sont lues dans `pu
 
 ```
 app/(site)/             pages du site (accueil, guide de tournage, pages légales) + header/footer
-app/demo/[slug]/        visite plein écran (une page statique par visite), intégrable en iframe
+app/demo/[slug]/        visite plein écran (une page statique par visite), servie sur visite.stayphora.fr/<slug>
+cloudflare-worker.ts    point d'entrée du Worker : route les visites par domaine avant OpenNext
 app/api/devis/route.ts  formulaire : rate limit → honeypot → Turnstile → zod → Resend
 components/tour/        viewer 3D : TourPlayer (léger), TourViewer (à la demande), engine, controls
 components/sections/    une section de la page d'accueil par fichier
@@ -119,14 +120,42 @@ manquantes) et le brancher dans `content/index.ts`.
    affichée (`{ label: "…", position: [...], target: [...] }`) dans `rooms`. La première pièce est le point de départ.
 6. **Couverture** : une capture de la scène (1600 × 1200, JPEG) dans `public/images/tours/<slug>.jpg`.
    Facultatif : une vidéo de survol (`video`) pour le repli sans WebGL.
-7. La page `/demo/<slug>`, le sitemap, la grille des réalisations et les vignettes de la démo se mettent à jour seuls.
+7. La visite est en ligne sur `https://visite.stayphora.fr/<slug>` (en local : `/demo/<slug>`) ; le sitemap,
+   la grille des réalisations et les vignettes de la démo se mettent à jour seuls.
+   **Cette URL est définitive** : elle est intégrée chez le client, ne changez jamais le slug d'une visite livrée.
 
 **Code d'intégration à livrer au client** :
 ```html
-<iframe src="https://stayphora.fr/demo/<slug>" width="100%" height="600" style="border:0;border-radius:16px"
+<iframe src="https://visite.stayphora.fr/<slug>" width="100%" height="600" style="border:0;border-radius:16px"
   allow="fullscreen; xr-spatial-tracking" loading="lazy" title="Visite 3D"></iframe>
 ```
-Les pages `/demo/*` autorisent l'intégration sur n'importe quel site (`frame-ancestors *`) ; le reste du site non.
+Les visites autorisent l'intégration sur n'importe quel site (`frame-ancestors *`) ; le reste du site non.
+
+### Domaine des visites (`visite.stayphora.fr`)
+
+Chaque visite a une adresse publique définitive : `https://visite.stayphora.fr/<slug>`. Le même Worker sert
+les deux domaines ; le routage est fait dans `cloudflare-worker.ts` (logique dans `lib/tour-routing.ts`) :
+
+| Requête | Résultat |
+|---|---|
+| `visite.stayphora.fr/<slug>` | la visite (page `/demo/<slug>`, réécriture interne invisible) |
+| `visite.stayphora.fr/` et toute autre page | 301 → `https://stayphora.fr` |
+| `visite.stayphora.fr/_next/*`, `/images/*`, `/videos/*`, `/icon`… | servis normalement |
+| `stayphora.fr/demo/<slug>` | 301 → `https://visite.stayphora.fr/<slug>` |
+| `localhost/demo/<slug>` (dev, preview) | la visite, sans redirection |
+
+**Pourquoi un Worker personnalisé ?** Les pages pré-rendues sont servies par le cache OpenNext *avant* le
+routage Next : `redirects`/`rewrites` de `next.config.ts` et `proxy.ts` ne s'y appliqueraient pas. Le Worker
+personnalisé ([méthode documentée par OpenNext](https://opennext.js.org/cloudflare/howtos/custom-worker))
+s'exécute avant tout, la logique est versionnée et testable, et aucune règle du dashboard n'est nécessaire.
+
+**Tester en local** : en preview, Miniflare remplace le nom d'hôte ; avec `NEXTJS_ENV=development`
+(`.dev.vars`), le Worker utilise `localhost` ou l'en-tête `x-stayphora-host` :
+```bash
+curl -I -H "x-stayphora-host: visite.stayphora.fr" http://localhost:8787/appartement   # 200
+curl -I -H "x-stayphora-host: visite.stayphora.fr" http://localhost:8787/              # 301
+curl -I -H "x-stayphora-host: stayphora.fr" http://localhost:8787/demo/appartement    # 301
+```
 
 ---
 
@@ -164,6 +193,7 @@ Les fichiers de `public/images` et `public/videos` sont mis en cache un an : **c
 | `CONTACT_EMAIL_FROM` | variable serveur | `vars` dans `wrangler.jsonc` (expéditeur, domaine vérifié dans Resend) |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | variable **de build** | Local : `.env` · Workers Builds : *Settings → Build → Variables and secrets* |
 | `NEXT_PUBLIC_ASSETS_URL` | variable **de build** | `https://assets.stayphora.fr` en production (vide en local) ; utilisée aussi par la CSP |
+| `NEXT_PUBLIC_TOURS_URL` | variable **de build** | `https://visite.stayphora.fr` en production (vide en local : liens en `/demo/<slug>`) |
 
 Clés de **test** Turnstile : site `1x00000000000000000000AA`, secret `1x0000000000000000000000000000000AA`.
 
@@ -213,14 +243,16 @@ npm run deploy
 **Ou via GitHub (Workers Builds)** : dashboard → **Workers & Pages** → **Create** → **Import a repository**
 → `BarbeauAxel/stayphora`.
 - Build command : `npx opennextjs-cloudflare build` · Deploy command : `npx opennextjs-cloudflare deploy`
-- *Settings → Build → Variables and secrets* : `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `NEXT_PUBLIC_ASSETS_URL`
+- *Settings → Build → Variables and secrets* : `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `NEXT_PUBLIC_ASSETS_URL`,
+  `NEXT_PUBLIC_TOURS_URL`
 - *Settings → Variables and secrets* (runtime) : `RESEND_API_KEY`, `TURNSTILE_SECRET_KEY` (type **Secret**)
 - Nom du Worker : `stayphora`
 
 ### 5. Domaine personnalisé
-Les `routes` `custom_domain` de `wrangler.jsonc` rattachent `stayphora.fr` et `www.stayphora.fr` au Worker
-au déploiement (DNS et certificat créés automatiquement). Supprimez d'abord tout enregistrement A/CNAME
-existant sur ces noms. Équivalent manuel : Worker → **Settings → Domains & Routes → Add → Custom domain**.
+Les `routes` `custom_domain` de `wrangler.jsonc` rattachent `stayphora.fr`, `www.stayphora.fr` et
+`visite.stayphora.fr` au Worker au déploiement (DNS et certificat créés automatiquement). Supprimez d'abord
+tout enregistrement A/AAAA/CNAME existant sur ces noms. Aucune règle supplémentaire n'est nécessaire pour
+`visite.stayphora.fr` : le routage est fait par le Worker. Équivalent manuel : Worker → **Settings → Domains & Routes → Add → Custom domain**.
 
 ### 6. Redirections 301
 Zone **stayphora.fr** → **Rules → Redirect Rules → Create rule** :
@@ -236,7 +268,9 @@ Les Redirect Rules s'exécutent avant le Worker.
 
 ### 7. Vérifications
 - Envoyer une demande de devis de test : email interne + confirmation (avec le guide de tournage).
-- Lancer une visite sur mobile et sur ordinateur ; `/demo/appartement` en plein écran.
+- Lancer une visite sur mobile et sur ordinateur ; `https://visite.stayphora.fr/appartement` en plein écran.
+- `curl -I https://visite.stayphora.fr/` → `301` vers `https://stayphora.fr` ;
+  `curl -I https://stayphora.fr/demo/appartement` → `301` vers `https://visite.stayphora.fr/appartement`.
 - `curl -I https://www.stayphora.fr` → `301` vers `https://stayphora.fr/`.
 - Logs : Worker → **Observability**.
 

@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: site.url, lastModified, changeFrequency: "monthly", priority: 1 },
     { url: `${site.url}/guide-tournage`, lastModified, changeFrequency: "yearly", priority: 0.6 },
     ...tours.map((tour) => ({
-      url: `${site.url}/demo/${tour.slug}`,
+      url: `${site.toursUrl}/${tour.slug}`,
       lastModified,
       changeFrequency: "yearly" as const,
       priority: 0.5,

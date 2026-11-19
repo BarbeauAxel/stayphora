@@ -7,7 +7,7 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 
 /** « Où partager votre visite ? » : section courte et visuelle. */
 export function Share() {
-  const { share } = getContent();
+  const { share, site } = getContent();
 
   return (
     <section id="partager" aria-labelledby="partager-title" className="paper-grain bg-sand py-24 sm:py-32">
@@ -19,7 +19,7 @@ export function Share() {
             <pre className="overflow-x-auto rounded-2xl bg-ink p-5 font-mono text-[12px] leading-relaxed text-cream/85">
               <code>
                 <span className="text-clay">{"<iframe"}</span>
-                {' src="https://stayphora.fr/demo/…"\n  width="100%" height="560"\n  allow="fullscreen; xr-spatial-tracking"'}
+                {` src="${site.toursUrl}/votre-logement"\n  width="100%" height="560"\n  allow="fullscreen; xr-spatial-tracking"`}
                 <span className="text-clay">{"></iframe>"}</span>
               </code>
             </pre>

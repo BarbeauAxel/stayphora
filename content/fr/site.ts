@@ -3,6 +3,7 @@ import type { SiteContent } from "../types";
 export const site: SiteContent = {
   name: "Stayphora",
   url: "https://stayphora.fr",
+  toursUrl: "https://visite.stayphora.fr",
   tagline: "Visites 3D navigables par IA pour locations courte durée",
   description:
     "Stayphora transforme une simple vidéo filmée au smartphone en visite 3D photoréaliste de votre location courte durée. Vos voyageurs se déplacent librement dans le logement, depuis leur navigateur.",

@@ -6,8 +6,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "stayphora",
-  // Point d'entrée généré par `opennextjs-cloudflare build`. Ne pas modifier.
-  "main": ".open-next/worker.js",
+  // Worker personnalisé qui enveloppe celui généré par OpenNext (.open-next/worker.js)
+  // pour router les visites 3D par domaine (visite.stayphora.fr). Voir cloudflare-worker.ts.
+  "main": "./cloudflare-worker.ts",
   // Ne jamais mettre une date dans le futur.
   "compatibility_date": "2026-11-18",
   "compatibility_flags": [
@@ -41,11 +42,13 @@
     "CONTACT_EMAIL_FROM": "Stayphora <devis@stayphora.fr>"
   },
   // Domaines personnalisés : Cloudflare crée les enregistrements DNS et le certificat.
-  // www.stayphora.fr est redirigé (301) vers stayphora.fr par une Redirect Rule
-  // Cloudflare, appliquée avant le Worker (voir README).
+  // - www.stayphora.fr : redirigé (301) vers stayphora.fr par une Redirect Rule (voir README).
+  // - visite.stayphora.fr : visites 3D clientes (visite.stayphora.fr/<slug>), routées
+  //   par cloudflare-worker.ts. Ces URL sont définitives (intégrées chez les clients).
   "routes": [
     { "pattern": "stayphora.fr", "custom_domain": true },
-    { "pattern": "www.stayphora.fr", "custom_domain": true }
+    { "pattern": "www.stayphora.fr", "custom_domain": true },
+    { "pattern": "visite.stayphora.fr", "custom_domain": true }
   ],
   "observability": {
     "enabled": true

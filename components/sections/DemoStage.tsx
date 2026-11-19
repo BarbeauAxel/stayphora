@@ -7,6 +7,7 @@ import { Expand } from "lucide-react";
 import type { Tour, TourUiContent } from "@/content/types";
 import { TourPlayer } from "@/components/tour/TourPlayer";
 import { cn } from "@/lib/cn";
+import { tourHref } from "@/lib/tour-links";
 
 /** Grand viewer de démo + vignettes pour changer de scène. */
 export function DemoStage({
@@ -69,7 +70,7 @@ export function DemoStage({
             <span className="font-medium text-ink">{tour.title}</span> · {tour.location}
           </p>
           <Link
-            href={`/demo/${tour.slug}`}
+            href={tourHref(tour.slug)}
             className="inline-flex items-center gap-2 text-clay-deep underline decoration-clay/40 underline-offset-4 transition-colors hover:decoration-clay-deep"
           >
             <Expand className="size-4" strokeWidth={1.5} aria-hidden="true" />
