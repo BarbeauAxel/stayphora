@@ -8,11 +8,6 @@ export const site: SiteContent = {
     "Stayphora transforme une simple vidéo filmée au smartphone en visite 3D photoréaliste de votre location courte durée. Vos voyageurs se déplacent librement dans le logement, depuis leur navigateur.",
   // [À remplacer] adresse de contact publique
   email: "contact@stayphora.fr",
-  // [À remplacer] liens réseaux sociaux
-  socials: {
-    instagram: "https://www.instagram.com/stayphora",
-    linkedin: "https://www.linkedin.com/company/stayphora",
-  },
   nav: [
     { label: "Démo", href: "/#demo" },
     { label: "Comment ça marche", href: "/#comment-ca-marche" },

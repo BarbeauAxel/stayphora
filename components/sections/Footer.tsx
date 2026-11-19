@@ -3,7 +3,6 @@ import { Mail } from "lucide-react";
 import { getContent } from "@/content";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
-import { InstagramIcon, LinkedinIcon } from "@/components/ui/SocialIcons";
 
 export function Footer() {
   const { site } = getContent();
@@ -42,18 +41,6 @@ export function Footer() {
                 <a href={`mailto:${site.email}`} className={`inline-flex items-center gap-3 ${linkClass}`}>
                   <Mail className="size-4.5" strokeWidth={1.25} aria-hidden="true" />
                   {site.email}
-                </a>
-              </li>
-              <li>
-                <a href={site.socials.instagram} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-3 ${linkClass}`}>
-                  <InstagramIcon className="size-4.5" />
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a href={site.socials.linkedin} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-3 ${linkClass}`}>
-                  <LinkedinIcon className="size-4.5" />
-                  LinkedIn
                 </a>
               </li>
             </ul>

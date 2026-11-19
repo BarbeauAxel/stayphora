@@ -66,7 +66,6 @@ export interface SiteContent {
   tagline: string;
   description: string;
   email: string;
-  socials: { instagram: string; linkedin: string };
   nav: NavItem[];
   ctaLabel: string;
   skipLink: string;

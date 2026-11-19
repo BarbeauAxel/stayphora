@@ -13,7 +13,6 @@ export function homeStructuredData() {
     logo: `${site.url}/icon`,
     description: site.description,
     email: site.email,
-    sameAs: [site.socials.instagram, site.socials.linkedin],
   };
 
   const service = {
