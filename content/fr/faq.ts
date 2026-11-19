@@ -28,7 +28,7 @@ export const faq: Content["faq"] = {
     {
       question: "La visite fonctionne-t-elle sur mobile ?",
       answer:
-        "Oui. La visite s'ouvre dans le navigateur, sans application, sur smartphone, tablette et ordinateur, et même dans un casque de réalité virtuelle. Une version allégée est servie automatiquement aux mobiles pour rester fluide.",
+        "Oui. La visite s'ouvre dans le navigateur, sans application, sur smartphone, tablette et ordinateur. Une version allégée est servie automatiquement aux mobiles pour rester fluide.",
     },
     {
       question: "Combien de temps la visite reste-t-elle en ligne ?",

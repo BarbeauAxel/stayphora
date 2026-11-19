@@ -82,7 +82,8 @@ manquantes) et le brancher dans `content/index.ts`.
   deux doigts pour se déplacer, double-clic ou double-tap pour aller vers un point. Mouvements amortis,
   déplacement limité à la zone `bounds` de la visite.
 - **Interface** : pièces, visite guidée (coupes franches si « réduire les animations » est activé),
-  plein écran (repli CSS sur iPhone), aide, crédit de la scène, mode VR si un casque WebXR est détecté.
+  plein écran (repli CSS sur iPhone), aide, crédit de la scène. Un bouton VR (WebXR) n'apparaît que si un
+  casque est détecté ; il n'est pas mis en avant sur le site.
 - **Performance** : pixel ratio plafonné (1,25 sur mobile), version allégée de la scène sur les écrans
   tactiles, rendu en pause hors écran ou onglet caché, mémoire WebGL libérée à la fermeture.
 - **Repli** : sans WebGL 2 (ou appareil < 2 Go de mémoire), la vidéo de la visite est proposée.

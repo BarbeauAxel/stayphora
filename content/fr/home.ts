@@ -26,7 +26,7 @@ export const hero: Content["hero"] = {
 export const reassurance: Content["reassurance"] = [
   { label: "Un smartphone suffit", icon: "smartphone" },
   { label: "Visite livrée sous 72 h", icon: "clock" },
-  { label: "Mobile, ordinateur et casque VR", icon: "devices" },
+  { label: "Mobile, tablette et ordinateur", icon: "devices" },
   { label: "Lien, QR code et intégration web", icon: "qr" },
 ];
 
