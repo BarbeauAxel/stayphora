@@ -1,13 +1,12 @@
 import type { Content } from "../types";
 
-// [À remplacer] prix réels (« [XX €] ») et durée d'hébergement (« [X mois] »)
 const included = [
   "Reconstruction 3D photoréaliste",
   "Points de vue par pièce",
   "Visite guidée automatique",
   "Lien de partage et QR code",
   "Code d'intégration pour votre site",
-  "Hébergement de la visite pendant [X mois]",
+  "Hébergement de la visite pendant 12 mois",
   "Une retouche incluse",
 ];
 
@@ -18,7 +17,7 @@ export const pricing: Content["pricing"] = {
   plans: [
     {
       name: "Studio / T2",
-      price: "[XX €]",
+      price: "129 €",
       unit: "par logement",
       description: "Jusqu'à 3 pièces. Idéal pour les studios, T1 et T2.",
       features: included,
@@ -26,9 +25,9 @@ export const pricing: Content["pricing"] = {
     },
     {
       name: "Maison / grand logement",
-      price: "[XX €]",
+      price: "249 €",
       unit: "par logement",
-      description: "Maisons, villas, gîtes et grands appartements, sans limite de pièces.",
+      description: "Maisons, villas, gîtes et grands appartements, jusqu'à 10 pièces. Au-delà, sur devis.",
       features: [...included.slice(0, 6), "Extérieurs inclus (terrasse, jardin)", "Une retouche incluse"],
       cta: "Demander un devis",
       highlighted: true,
@@ -36,19 +35,18 @@ export const pricing: Content["pricing"] = {
     },
     {
       name: "Conciergeries",
-      price: "Sur devis",
-      unit: "tarifs dégressifs",
+      price: "Dès 79 €",
+      unit: "par visite, selon le volume",
       description: "Pour les conciergeries et gestionnaires qui valorisent tout un parc de logements.",
       features: [
         "Tarifs dégressifs au volume",
         "Visites en marque blanche",
         "Page de visite à vos couleurs",
         "Interlocuteur dédié",
-        "Délais prioritaires",
         "Facturation mensuelle",
       ],
       cta: "Parler de votre parc",
     },
   ],
-  note: "Visites supplémentaires, mises à jour après travaux et hébergement prolongé sur simple demande.",
+  note: "Prix nets, TVA non applicable (art. 293 B du CGI). Renouvellement de l'hébergement : 39 € par an. Options : livraison express sous 24 h (+49 €), mise à jour après travaux (69 €), export des fichiers 3D (49 €).",
 };

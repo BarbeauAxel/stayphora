@@ -33,7 +33,7 @@ export const faq: Content["faq"] = {
     {
       question: "Combien de temps la visite reste-t-elle en ligne ?",
       answer:
-        "L'hébergement est inclus pendant [X mois], puis peut être prolongé pour un petit forfait annuel. Vous pouvez aussi nous demander une mise à jour après des travaux ou un changement de décoration.",
+        "L'hébergement est inclus pendant 12 mois, puis se renouvelle pour 39 € par an. Sans renouvellement, la visite est désactivée, puis supprimée au bout de 90 jours. Vous pouvez aussi nous demander une mise à jour après des travaux ou un changement de décoration.",
     },
     {
       question: "Et ma vie privée ?",

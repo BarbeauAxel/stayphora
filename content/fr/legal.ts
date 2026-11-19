@@ -107,7 +107,7 @@ export const legal: Content["legal"] = {
       {
         title: "Durée de conservation",
         paragraphs: [
-          "Les données d'une demande de devis sans suite sont conservées au maximum 3 ans à compter du dernier contact. Les vidéos et photos sources sont supprimées au plus tard [3 mois] après la livraison de la visite. La visite 3D reste en ligne pendant la durée d'hébergement prévue au devis, puis est supprimée. Les données de facturation sont archivées 10 ans (obligation comptable).",
+          "Les données d'une demande de devis sans suite sont conservées au maximum 3 ans à compter du dernier contact. Les vidéos et photos sources sont supprimées au plus tard 90 jours après la livraison de la visite. La visite 3D reste en ligne pendant la durée d'hébergement prévue au devis, puis est supprimée. Les données de facturation sont archivées 10 ans (obligation comptable).",
         ],
       },
       {
