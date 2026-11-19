@@ -194,6 +194,7 @@ Les fichiers de `public/images` et `public/videos` sont mis en cache un an : **c
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | variable **de build** | Local : `.env` · Workers Builds : *Settings → Build → Variables and secrets* |
 | `NEXT_PUBLIC_ASSETS_URL` | variable **de build** | `https://assets.stayphora.fr` en production (vide en local) ; utilisée aussi par la CSP |
 | `NEXT_PUBLIC_TOURS_URL` | variable **de build** | `https://visite.stayphora.fr` en production (vide en local : liens en `/demo/<slug>`) |
+| `NEXT_PUBLIC_CF_BEACON_TOKEN` | variable **de build** | Jeton Cloudflare Web Analytics (vide : script non inclus) |
 
 Clés de **test** Turnstile : site `1x00000000000000000000AA`, secret `1x0000000000000000000000000000000AA`.
 
@@ -249,6 +250,12 @@ mode **Managed**. Récupérez la **Site Key** (`NEXT_PUBLIC_TURNSTILE_SITE_KEY`)
    **TXT** `resend._domainkey` (**DKIM**) ; recommandé : **TXT** `_dmarc` = `v=DMARC1; p=none; rua=mailto:contact@stayphora.fr`.
 3. **Verify** dans Resend, puis créez une clé API (*Sending access*) → `npx wrangler secret put RESEND_API_KEY`.
 
+### 3 bis. Cloudflare Web Analytics (sans cookie)
+Dashboard → **Analytics & Logs → Web Analytics → Add a site** → `stayphora.fr`. Choisissez l'installation
+par **extrait JavaScript** (pas l'injection automatique, pour garder le contrôle et éviter un double comptage),
+copiez le `token` de l'extrait dans `NEXT_PUBLIC_CF_BEACON_TOKEN` (variable de build). Le script n'est chargé
+que sur les pages du site, jamais dans les visites intégrées chez les clients.
+
 ### 4. Déployer
 **Depuis votre poste** (`.env` contenant les vraies `NEXT_PUBLIC_*`) :
 ```bash
@@ -260,7 +267,7 @@ npm run deploy
 → `BarbeauAxel/stayphora`.
 - Build command : `npx opennextjs-cloudflare build` · Deploy command : `npx opennextjs-cloudflare deploy`
 - *Settings → Build → Variables and secrets* : `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `NEXT_PUBLIC_ASSETS_URL`,
-  `NEXT_PUBLIC_TOURS_URL`
+  `NEXT_PUBLIC_TOURS_URL`, `NEXT_PUBLIC_CF_BEACON_TOKEN`
 - *Settings → Variables and secrets* (runtime) : `RESEND_API_KEY`, `TURNSTILE_SECRET_KEY` (type **Secret**)
 - Nom du Worker : `stayphora`
 

@@ -93,7 +93,7 @@ export const legal: Content["legal"] = {
         title: "Destinataires et sous-traitants",
         paragraphs: ["Vos données sont destinées à Stayphora uniquement. Nous faisons appel aux sous-traitants suivants :"],
         list: [
-          "Cloudflare, Inc. (États-Unis) : hébergement du site et des visites 3D (Workers, R2), stockage des demandes de devis dans une base de données Cloudflare D1 (emplacement principal : Europe de l'Ouest), protection anti-spam (Turnstile) ;",
+          "Cloudflare, Inc. (États-Unis) : hébergement du site et des visites 3D (Workers, R2), stockage des demandes de devis dans une base de données Cloudflare D1 (emplacement principal : Europe de l'Ouest), protection anti-spam (Turnstile), mesure d'audience sans cookie (Cloudflare Web Analytics) ;",
           "Resend, Inc. (États-Unis) : acheminement des emails liés à votre demande ;",
           "le service de transfert de fichiers que vous choisissez (WeTransfer, Google Drive, Dropbox…) pour l'envoi de vos vidéos.",
         ],
@@ -113,7 +113,7 @@ export const legal: Content["legal"] = {
       {
         title: "Cookies",
         paragraphs: [
-          "Ce site n'utilise ni cookie publicitaire ni outil de mesure d'audience. Cloudflare Turnstile peut traiter des informations techniques strictement nécessaires à la détection des robots, sans finalité de suivi.",
+          "Ce site utilise Cloudflare Web Analytics, une mesure d'audience sans cookie, sans identifiant persistant et sans suivi individuel des visiteurs : elle ne produit que des statistiques globales (pages vues, provenance, type d'appareil). Aucun cookie publicitaire n'est déposé. Cloudflare Turnstile peut traiter des informations techniques strictement nécessaires à la détection des robots, sans finalité de suivi.",
         ],
       },
       {

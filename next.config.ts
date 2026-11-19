@@ -19,16 +19,18 @@ const assetsOrigin = (() => {
  *   requête : 'unsafe-inline' est nécessaire pour les scripts d'hydratation Next.
  * - Viewer 3D (Spark) : WebAssembly ('wasm-unsafe-eval', sans autoriser eval),
  *   workers créés depuis des blob:, fichiers de scène lus sur le domaine des assets.
+ * - Cloudflare Web Analytics : script sur static.cloudflareinsights.com, envoi des
+ *   mesures vers cloudflareinsights.com.
  * - 'unsafe-eval' uniquement en développement (React Refresh).
  */
 const cspDirectives = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://challenges.cloudflare.com${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://challenges.cloudflare.com https://static.cloudflareinsights.com${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: ${assetsOrigin}`.trim(),
   `media-src 'self' blob: ${assetsOrigin}`.trim(),
   "font-src 'self'",
-  `connect-src 'self' blob: data: https://challenges.cloudflare.com ${assetsOrigin}`.trim(),
+  `connect-src 'self' blob: data: https://challenges.cloudflare.com https://cloudflareinsights.com ${assetsOrigin}`.trim(),
   "frame-src https://challenges.cloudflare.com",
   "worker-src 'self' blob: data:",
   "object-src 'none'",
